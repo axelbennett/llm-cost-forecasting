@@ -19,3 +19,12 @@ Synthetic usage data generated to simulate realistic account behavior patterns (
 
 ## Status
 🚧 Work in progress — built as a portfolio project to demonstrate applied PyTorch, time series forecasting, and uncertainty-aware modeling for AI/ML engineering roles.
+
+## Progress
+- [x] Synthetic data generator (50 accounts × 90 days)
+- [x] LSTM baseline model trained (20 epochs, MSE loss)
+- [ ] Evaluation script + forecast visualization
+- [ ] Temporal transformer with quantile output
+- [ ] Pinball loss implementation
+- [ ] Streamlit dashboard
+- [ ] FastAPI endpoint + Docker
