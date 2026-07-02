@@ -1,30 +1,70 @@
-# llm-cost-forecasting
-Forecasting LLM token usage/cost per account using a quantile transformer model
-## Problem
-Given an account's last 28 days of token usage (plus account metadata like plan tier and company size), predict the next 7 days of usage at the 10th, 50th, and 90th percentiles. This gives a realistic worst-case/likely-case/best-case range instead of a single guess.
+# LLM Cost Forecasting
 
-## Approach
-- **Baseline:** simple moving average / exponential smoothing
-- **Classical:** per-account ARIMA / Prophet
-- **Main model:** a small temporal transformer (PyTorch) with quantile output heads, trained with pinball loss for probabilistic forecasting
-- **Comparison model:** an LSTM trained with standard MSE loss, used as an ablation to demonstrate the value of the transformer + quantile loss approach
+Forecasting LLM token usage/cost per account for SaaS companies running 
+LLM-powered features. Built with PyTorch — a quantile transformer that 
+predicts the next 7 days of token usage as a calibrated uncertainty range 
+(p10/p50/p90) rather than a single point estimate.
 
-## Data
-Synthetic usage data generated to simulate realistic account behavior patterns (steady, growing, bursty, declining, seasonal), correlated with account metadata such as plan tier and company size.
+## Results
+- Transformer MAE: **0.0982**
+- LSTM baseline MAE: **0.2393**
+- Improvement: **59% better accuracy**
+- Band coverage: actual values land inside the p10–p90 interval on every 
+  forecast day
 
-## Evaluation
-- MAE / RMSE for point forecasts
-- Calibration of prediction intervals (does the true value fall inside the 80% interval ~80% of the time?)
-- Business framing: percentage of cost-overrun accounts flagged before the overrun occurs
+## Why this problem
+Every SaaS company shipping LLM features now has unpredictable infrastructure 
+costs. Token usage spikes with batch jobs, long prompts, and retry loops. 
+Finance teams need calibrated forecasts — not just averages — to budget for 
+worst-case exposure. This project builds that system.
+
+## Architecture
+- **Data:** 50 synthetic accounts × 90 days, 5 behavior archetypes 
+  (steady, growing, bursty, declining, seasonal)
+- **Baseline:** LSTM with MSE loss — single point forecast
+- **Main model:** Temporal transformer with quantile output head, trained 
+  with pinball loss for probabilistic forecasting
+- **Output:** [7 days × 3 quantiles] — low / median / high per day
+
+## Tech stack
+Python · PyTorch · Streamlit · pandas · NumPy · matplotlib
+
+## Setup
+```bash
+git clone https://github.com/axelbennett/llm-cost-forecasting.git
+cd llm-cost-forecasting
+python -m venv pytorch-env
+pytorch-env\Scripts\activate  # Windows
+pip install torch numpy pandas scikit-learn matplotlib streamlit
+python data/generate_data.py
+python Models/train_transformer.py
+streamlit run dashboard.py
+```
+
+## Project structure
+llm-cost-forecasting/
+  data/
+    generate_data.py       # synthetic data generator
+  Models/
+    transformer.py         # temporal transformer architecture
+    train.py               # LSTM baseline training
+    train_transformer.py   # transformer training with pinball loss
+  losses/
+    pinball_loss.py        # custom quantile loss function
+  evaluate.py              # LSTM evaluation + forecast plot
+  compare.py               # side by side model comparison
+  dashboard.py             # streamlit forecast dashboard
+
+  ## Progress
+- [x] Synthetic data generator (50 accounts x 90 days)
+- [x] LSTM baseline trained and evaluated
+- [x] Temporal transformer with quantile output head
+- [x] Custom pinball loss function
+- [x] Model comparison — transformer wins by 59% MAE
+- [x] Streamlit dashboard with live forecast band
+- [ ] FastAPI inference endpoint
+- [ ] Docker container
+- [ ] Deploy to Render (live URL)
 
 ## Status
-🚧 Work in progress — built as a portfolio project to demonstrate applied PyTorch, time series forecasting, and uncertainty-aware modeling for AI/ML engineering roles.
-
-## Progress
-- [x] Synthetic data generator (50 accounts × 90 days)
-- [x] LSTM baseline model trained (20 epochs, MSE loss)
-- [ ] Evaluation script + forecast visualization
-- [ ] Temporal transformer with quantile output
-- [ ] Pinball loss implementation
-- [ ] Streamlit dashboard
-- [ ] FastAPI endpoint + Docker
+🚧 Active build — portfolio project targeting ML/AI Engineer roles
