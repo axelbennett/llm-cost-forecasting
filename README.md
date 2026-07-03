@@ -82,8 +82,13 @@ llm-cost-forecasting/
 - [x] Streamlit dashboard with live forecast band
 - [x] FastAPI inference endpoint
 - [x] Docker container
-- [ ] Deploy to Render (live URL)
+- [x] Deploy to Render (live URL)
 
 ## Status
 🚧 Active build — portfolio project targeting ML/AI Engineer roles
+
+## Live Demo
+API: https://llm-cost-forecasting.onrender.com/docs
+
+
 
