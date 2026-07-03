@@ -6,11 +6,14 @@ predicts the next 7 days of token usage as a calibrated uncertainty range
 (p10/p50/p90) rather than a single point estimate.
 
 ## Results
+
+![Forecast Comparison](comparison_plot.png)
+
 - Transformer MAE: **0.0982**
 - LSTM baseline MAE: **0.2393**
 - Improvement: **59% better accuracy**
-- Band coverage: actual values land inside the p10–p90 interval on every 
-  forecast day
+- Band coverage: **7/7 days** inside p10-p90 interval
+
 
 ## Why this problem
 Every SaaS company shipping LLM features now has unpredictable infrastructure 
@@ -62,9 +65,10 @@ llm-cost-forecasting/
 - [x] Custom pinball loss function
 - [x] Model comparison — transformer wins by 59% MAE
 - [x] Streamlit dashboard with live forecast band
-- [ ] FastAPI inference endpoint
-- [ ] Docker container
+- [x] FastAPI inference endpoint
+- [x] Docker container
 - [ ] Deploy to Render (live URL)
 
 ## Status
 🚧 Active build — portfolio project targeting ML/AI Engineer roles
+
