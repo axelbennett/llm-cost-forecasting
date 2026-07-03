@@ -42,6 +42,21 @@ pip install torch numpy pandas scikit-learn matplotlib streamlit
 python data/generate_data.py
 python Models/train_transformer.py
 streamlit run dashboard.py
+
+## Run the API locally
+
+```bash
+uvicorn api:app --reload
+```
+# API available at http://127.0.0.1:8000/docs
+
+## Run with Docker
+
+```bash
+docker build -t llm-cost-forecasting .
+docker run -p 8000:8000 llm-cost-forecasting
+```
+# API available at http://localhost:8000/docs
 ```
 
 ## Project structure
